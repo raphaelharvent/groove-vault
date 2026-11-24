@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Groove Vault · Ta collection de vinyles</title>
+  <meta name="description" content="Application Windows gratuite pour recenser ta collection de vinyles : platine animée, cote réelle Discogs, indice de rareté et collections de tes amis.">
+  <link rel="icon" href="img/icon.png">
+  <meta property="og:title" content="Groove Vault">
+  <meta property="og:description" content="Ta collection de vinyles, avec sa vraie cote et sa rareté.">
+  <meta property="og:image" content="img/collection.jpg">
+  <style>
+    :root {
+      --bg: #0e0c0b; --panel: #1a1614; --line: rgba(255, 236, 214, .09); --text: #f1e8dc; --muted: #a99b8b; --dim: #6f6458;
+      --accent: #f0a04b; --accent2: #e0663a;
+      --display: 'Bahnschrift', 'Segoe UI Variable Display', 'Segoe UI', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; color: var(--text); font: 16px/1.6 'Segoe UI', system-ui, sans-serif; background: var(--bg);
+      background-image: radial-gradient(1100px 600px at 80% -10%, rgba(240, 160, 75, .10), transparent 60%),
+                        radial-gradient(900px 500px at -10% 40%, rgba(224, 102, 58, .06), transparent 60%);
+      overflow-x: hidden;
+    }
+    a { color: var(--accent); }
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+
+    nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); background: rgba(14, 12, 11, .7); border-bottom: 1px solid var(--line); }
+    nav .wrap { display: flex; align-items: center; gap: 28px; height: 66px; }
+    .logo { display: flex; align-items: center; gap: 10px; font: 700 20px var(--display); color: var(--text); text-decoration: none; margin-right: auto; }
+    .logo img { width: 34px; height: 34px; animation: spin 1.8s linear infinite; }
+    nav a.link { color: var(--muted); text-decoration: none; font-weight: 500; }
+    nav a.link:hover { color: var(--text); }
+
+    .btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 12px; font-weight: 700; text-decoration: none; transition: transform .15s, box-shadow .2s; }
+    .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #1a0e05; box-shadow: 0 8px 26px rgba(224, 102, 58, .3); }
+    .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(224, 102, 58, .45); }
+    .btn.ghost { border: 1px solid var(--line); color: var(--text); background: rgba(255, 236, 214, .04); }
+    .btn.big { padding: 17px 30px; font-size: 18px; border-radius: 14px; }
+    .btn svg { width: 20px; height: 20px; }
+    nav .btn { padding: 9px 16px; font-size: 14px; }
+
+    /* Hero */
+    .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; padding: 90px 0 70px; }
+    .eyebrow { display: inline-block; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 18px; }
+    h1 { font: 700 clamp(40px, 5.6vw, 66px)/1.02 var(--display); margin: 0 0 22px; letter-spacing: -.01em; }
+    h1 em { font-style: normal; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lead { font-size: 19px; color: var(--muted); max-width: 520px; margin: 0 0 34px; }
+    .cta { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .meta { margin-top: 16px; font-size: 13.5px; color: var(--dim); }
+
+    .stage { position: relative; height: 440px; }
+    .sleeve {
+      position: absolute; left: 0; top: 30px; width: 380px; height: 380px; border-radius: 6px; z-index: 2;
+      background:
+        radial-gradient(circle at 75% 25%, rgba(255, 200, 120, .55), transparent 45%),
+        linear-gradient(150deg, #e0663a, #5a1f12 60%, #1d0a06);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(255, 255, 255, .08);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 34px;
+      animation: sleeve 6s ease-in-out infinite;
+    }
+    .sleeve small { letter-spacing: .2em; text-transform: uppercase; font-size: 12px; opacity: .75; }
+    .sleeve b { font: 700 40px/1 var(--display); }
+    .record {
+      position: absolute; left: 10px; top: 40px; width: 360px; height: 360px; border-radius: 50%; z-index: 1;
+      background:
+        radial-gradient(circle, #0e0c0b 0 1.6%, var(--accent) 2% 30%, rgba(0, 0, 0, .55) 30.4% 32%, transparent 32.4%),
+        radial-gradient(circle, transparent 0 96%, rgba(255, 255, 255, .1) 97.5%, rgba(0, 0, 0, .6) 99.5%),
+        repeating-radial-gradient(circle, #1d1d1d 0 1px, #0a0a0a 1px 2.8px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .6);
+      animation: slide 6s ease-in-out infinite;
+    }
+    .record::before { content: ""; position: absolute; inset: 0; border-radius: 50%; animation: spin 1.8s linear infinite;
+      background: radial-gradient(circle at 50% 38%, rgba(26, 14, 5, .9) 0 1.5%, transparent 2%); }
+    .record::after { content: ""; position: absolute; inset: 0; border-radius: 50%; mix-blend-mode: screen;
+      background: conic-gradient(from 25deg, transparent, rgba(255, 255, 255, .16) 16deg, transparent 46deg, transparent 180deg, rgba(255, 255, 255, .12) 196deg, transparent 226deg); }
+    @keyframes slide { 0%, 12% { transform: translateX(0); } 40%, 88% { transform: translateX(190px); } 100% { transform: translateX(0); } }
+    @keyframes sleeve { 0%, 12% { transform: none; } 40%, 88% { transform: translateX(-20px) rotate(-2deg); } 100% { transform: none; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .badge-float { position: absolute; z-index: 3; padding: 10px 16px; border-radius: 14px; background: rgba(26, 22, 20, .85); border: 1px solid var(--line); backdrop-filter: blur(10px); box-shadow: 0 14px 30px rgba(0, 0, 0, .5); font-size: 14px; }
+    .badge-float b { display: block; font: 700 22px var(--display); }
+    .bf1 { right: 0; top: 10px; } .bf1 b { color: #f5b942; }
+    .bf2 { right: 30px; bottom: 20px; } .bf2 b { color: var(--accent); }
+
+    /* Sections */
+    section { padding: 70px 0; }
+    h2 { font: 700 40px/1.1 var(--display); margin: 0 0 14px; }
+    .section-lead { color: var(--muted); font-size: 18px; margin: 0 0 40px; max-width: 640px; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .feature { padding: 26px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); transition: transform .25s, border-color .25s; }
+    .feature:hover { transform: translateY(-4px); border-color: rgba(240, 160, 75, .3); }
+    .feature .ico { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; background: rgba(240, 160, 75, .12); margin-bottom: 16px; }
+    .feature h3 { font: 700 19px var(--display); margin: 0 0 6px; }
+    .feature p { margin: 0; color: var(--muted); font-size: 15px; }
+
+    .shots { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+    .shots figure { margin: 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 60px rgba(0, 0, 0, .5); background: var(--panel); }
+    .shots figure:first-child { grid-row: span 2; }
+    .shots img { width: 100%; display: block; }
+    .shots figcaption { padding: 12px 16px; font-size: 14px; color: var(--muted); }
+
+    .install { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+    .steps li { position: relative; padding: 0 0 26px 62px; counter-increment: s; }
+    .steps li::before { content: counter(s); position: absolute; left: 0; top: -2px; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font: 700 17px var(--display); background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #1a0e05; }
+    .steps li::after { content: ""; position: absolute; left: 19px; top: 42px; bottom: 4px; width: 2px; background: var(--line); }
+    .steps li:last-child::after { display: none; }
+    .steps b { display: block; font: 700 18px var(--display); margin-bottom: 2px; }
+    .steps span { color: var(--muted); font-size: 15px; }
+    .dl-card { padding: 34px; border-radius: 20px; background: radial-gradient(120% 120% at 100% 0%, rgba(240, 160, 75, .18), transparent 60%), var(--panel); border: 1px solid var(--line); text-align: center; }
+    .dl-card img { width: 96px; margin-bottom: 10px; }
+    .dl-card h3 { font: 700 26px var(--display); margin: 0 0 4px; }
+    .dl-card p { color: var(--muted); margin: 0 0 24px; }
+    .smartscreen { margin-top: 22px; padding: 14px 16px; border-radius: 12px; background: rgba(240, 160, 75, .07); border: 1px solid rgba(240, 160, 75, .22); color: #f3d2ad; font-size: 14px; text-align: left; }
+
+    details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+    summary { cursor: pointer; font: 600 18px var(--display); list-style: none; display: flex; justify-content: space-between; }
+    summary::after { content: "+"; color: var(--accent); font-size: 22px; transition: transform .2s; }
+    details[open] summary::after { transform: rotate(45deg); }
+    details p { color: var(--muted); margin: 12px 0 0; }
+
+    footer { padding: 40px 0 60px; color: var(--dim); font-size: 14px; border-top: 1px solid var(--line); margin-top: 40px; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+    @media (max-width: 900px) {
+      .hero, .install, .shots { grid-template-columns: 1fr; }
+      .features { grid-template-columns: 1fr 1fr; }
+      .stage { height: 380px; transform: scale(.8); transform-origin: left top; }
+      nav a.link { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="wrap">
+      <a class="logo" href="#"><img src="img/icon.png" alt="">Groove Vault</a>
+      <a class="link" href="#fonctionnalites">Fonctionnalités</a>
+      <a class="link" href="#installer">Installer</a>
+      <a class="link" href="#faq">FAQ</a>
+      <a class="btn primary dl-link" href="#installer">Télécharger</a>
+    </div>
+  </nav>
+
+  <header class="wrap hero">
+    <div>
+      <span class="eyebrow">Gratuit · Windows 10 et 11</span>
+      <h1>Ta collection de vinyles,<br><em>comme elle le mérite.</em></h1>
+      <p class="lead">Recense tes disques, regarde-les tourner sur une vraie platine, découvre leur cote réelle et leur rareté, et compare ta discothèque avec celles de tes amis.</p>
+      <div class="cta">
+        <a class="btn primary big dl-link" href="#installer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
+          Télécharger pour Windows
+        </a>
+        <a class="btn ghost big" href="#fonctionnalites">Découvrir</a>
+      </div>
+      <div class="meta" id="release-meta">Installateur Windows 64 bits</div>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <div class="record"></div>
+      <div class="sleeve"><small>Groove Vault</small><b>Side A</b></div>
+      <div class="badge-float bf1">Rareté<b>Légendaire</b></div>
+      <div class="badge-float bf2">Cote estimée<b>950,00 €</b></div>
+    </div>
+  </header>
+
+  <section id="fonctionnalites">
+    <div class="wrap">
+      <h2>Tout ce qu'un collectionneur attend</h2>
+      <p class="section-lead">Les données viennent de Discogs, la plus grande base de vinyles au monde (plus de 18 millions de références).</p>
+      <div class="features">
+        <div class="feature"><div class="ico">💿</div><h3>Platine animée</h3><p>Chaque disque se pose sur une platine : le bras se place, le plateau accélère à 33⅓ ou 45 tours, avec les craquements du vinyle.</p></div>
+        <div class="feature"><div class="ico">💶</div><h3>Cote réelle</h3><p>Prix plancher du marché, prix conseillés selon l'état (M, NM, VG+…) et plus-value par rapport à ton prix d'achat.</p></div>
+        <div class="feature"><div class="ico">✨</div><h3>Indice de rareté</h3><p>Un score sur 100 calculé à partir du tirage, de la demande et de l'offre, de « Commun » à « Légendaire ».</p></div>
+        <div class="feature"><div class="ico">🎨</div><h3>Vinyles colorés</h3><p>Translucides, marbrés, éclaboussés : les éditions colorées sont détectées et dessinées dans leur vraie couleur.</p></div>
+        <div class="feature"><div class="ico">👥</div><h3>Profil et amis</h3><p>Crée ton profil avec ta photo, ajoute tes amis et parcours leur collection, avec les disques que vous avez en commun.</p></div>
+        <div class="feature"><div class="ico">📊</div><h3>Statistiques</h3><p>Valeur totale, genres, décennies, disques les plus précieux et les plus rares de ta discothèque.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Aperçu</h2>
+      <p class="section-lead">Une interface sombre et chaleureuse, pensée comme un salon d'écoute.</p>
+      <div class="shots">
+        <figure><img src="img/detail.jpg" alt="Fiche d'un disque sur la platine animée" loading="lazy"><figcaption>La fiche d'un disque : platine, rareté et cote</figcaption></figure>
+        <figure><img src="img/collection.jpg" alt="Grille de la collection" loading="lazy"><figcaption>Ta collection, pochette par pochette</figcaption></figure>
+        <figure><img src="img/profile.jpg" alt="Profil et amis" loading="lazy"><figcaption>Ton profil et tes amis</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="installer">
+    <div class="wrap install">
+      <div>
+        <h2>Installer en 2 minutes</h2>
+        <p class="section-lead">Aucune configuration technique : télécharge, installe, crée ton profil.</p>
+        <ol class="steps">
+          <li><b>Télécharge l'installateur</b><span>Le fichier « Groove-Vault-Setup.exe » (environ 115 Mo).</span></li>
+          <li><b>Lance-le</b><span>Si Windows affiche « Windows a protégé votre ordinateur », clique sur « Informations complémentaires » puis « Exécuter quand même ».</span></li>
+          <li><b>Crée ton profil</b><span>Onglet « Profil &amp; amis » : choisis un pseudo et une photo, puis ajoute tes amis.</span></li>
+          <li><b>Ajoute tes disques</b><span>Colle ton jeton Discogs gratuit dans « Réglages » pour retrouver tes disques et leur cote en un clic.</span></li>
+        </ol>
+      </div>
+      <div class="dl-card">
+        <img src="img/icon.png" alt="">
+        <h3>Groove Vault</h3>
+        <p id="dl-version">Windows 10 / 11 · 64 bits</p>
+        <a class="btn primary big dl-link" href="#installer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
+          Télécharger
+        </a>
+        <div class="smartscreen">L'application n'est pas signée par un certificat payant, c'est pourquoi Windows SmartScreen affiche un avertissement au premier lancement. Elle ne contient aucune publicité ni aucun pisteur.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <h2>Questions fréquentes</h2>
+      <details><summary>C'est vraiment gratuit ?</summary><p>Oui, entièrement. Les données de cote viennent de l'API publique de Discogs.</p></details>
+      <details><summary>Où sont stockées mes données ?</summary><p>Ta collection est enregistrée sur ton PC. Si tu crées un profil, elle est aussi synchronisée en ligne pour que tes amis puissent la voir et que tu puisses la retrouver sur un autre ordinateur. Tes prix d'achat et tes notes restent privés.</p></details>
+      <details><summary>Qu'est-ce que le jeton Discogs ?</summary><p>Une clé gratuite qui permet à l'application d'interroger Discogs en ton nom. Crée un compte sur discogs.com, puis va dans Paramètres → Développeurs → « Générer un nouveau jeton », et colle-le dans les Réglages de Groove Vault.</p></details>
+      <details><summary>Comment est calculée la rareté ?</summary><p>Le score combine le nombre de membres qui possèdent le pressage (35 %), le rapport entre ceux qui le recherchent et ceux qui l'ont (25 %), le nombre d'exemplaires en vente (20 %) et le prix plancher (20 %).</p></details>
+      <details><summary>Et sur Mac ou Linux ?</summary><p>Pour l'instant, seule la version Windows est proposée.</p></details>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year"></span> Groove Vault</span>
+      <span>Données de disques fournies par Discogs. Groove Vault n'est pas affilié à Discogs.</span>
+    </div>
+  </footer>
+
+  <script>
+    // Dépôt GitHub qui héberge l'installateur (onglet Releases)
+    const REPO = 'raphaelharvent/groove-vault';
+    const FILE = 'Groove-Vault-Setup.exe';
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    if (!REPO.startsWith('OWNER')) {
+      const url = `https://github.com/${REPO}/releases/latest/download/${FILE}`;
+      document.querySelectorAll('.dl-link').forEach(a => { a.href = url; });
+      fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
+        .then(r => r.ok ? r.json() : null)
+        .then(rel => {
+          if (!rel) return;
+          const asset = (rel.assets || []).find(a => a.name === FILE);
+          const size = asset ? ` · ${Math.round(asset.size / 1048576)} Mo` : '';
+          const date = new Date(rel.published_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+          document.getElementById('release-meta').textContent = `Version ${rel.tag_name.replace(/^v/, '')} · ${date}${size}`;
+          document.getElementById('dl-version').textContent = `Version ${rel.tag_name.replace(/^v/, '')} · Windows 10 / 11 · 64 bits${size}`;
+        })
+        .catch(() => {});
+    }
+  </script>
+</body>
+</html>
