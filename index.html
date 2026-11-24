@@ -93,6 +93,7 @@
     .feature .ico { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; background: rgba(240, 160, 75, .12); margin-bottom: 16px; }
     .feature h3 { font: 700 19px var(--display); margin: 0 0 6px; }
     .feature p { margin: 0; color: var(--muted); font-size: 15px; }
+    .feature .new { font: 700 10px var(--body, sans-serif); letter-spacing: .08em; text-transform: uppercase; vertical-align: 3px; padding: 2px 7px; border-radius: 6px; color: #1a0e05; background: linear-gradient(135deg, #f0a04b, #e0663a); }
 
     .shots { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
     .shots figure { margin: 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 60px rgba(0, 0, 0, .5); background: var(--panel); }
@@ -176,6 +177,9 @@
         <div class="feature"><div class="ico">🎨</div><h3>Vinyles colorés</h3><p>Translucides, marbrés, éclaboussés : les éditions colorées sont détectées et dessinées dans leur vraie couleur.</p></div>
         <div class="feature"><div class="ico">👥</div><h3>Profil et amis</h3><p>Crée ton profil avec ta photo, ajoute tes amis et parcours leur collection, avec les disques que vous avez en commun.</p></div>
         <div class="feature"><div class="ico">📊</div><h3>Statistiques</h3><p>Valeur totale, genres, décennies, disques les plus précieux et les plus rares de ta discothèque.</p></div>
+        <div class="feature"><div class="ico">⭐</div><h3>Critiques d'albums <span class="new">Nouveau</span></h3><p>Note tes albums de ½ à 5 étoiles, écris ton avis, marque tes coups de cœur et découvre les critiques de tes amis et de la communauté.</p></div>
+        <div class="feature"><div class="ico">📥</div><h3>Import Discogs</h3><p>Ta collection est déjà sur Discogs ? Importe-la en un clic : états, notes et cotes sont récupérés automatiquement.</p></div>
+        <div class="feature"><div class="ico">🔄</div><h3>Mises à jour automatiques</h3><p>Quand une nouvelle version sort, l'appli te la propose et s'installe toute seule, sans rien perdre.</p></div>
       </div>
     </div>
   </section>
@@ -251,8 +255,10 @@
           const asset = (rel.assets || []).find(a => a.name === FILE);
           const size = asset ? ` · ${Math.round(asset.size / 1048576)} Mo` : '';
           const date = new Date(rel.published_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-          document.getElementById('release-meta').textContent = `Version ${rel.tag_name.replace(/^v/, '')} · ${date}${size}`;
-          document.getElementById('dl-version').textContent = `Version ${rel.tag_name.replace(/^v/, '')} · Windows 10 / 11 · 64 bits${size}`;
+          // 1.2.0-beta.1 -> 1.2.0 bêta 1
+          const version = rel.tag_name.replace(/^v/, '').replace(/-beta\.?(\d*)$/, (_, n) => ' bêta' + (n ? ' ' + n : ''));
+          document.getElementById('release-meta').textContent = `Version ${version} · ${date}${size}`;
+          document.getElementById('dl-version').textContent = `Version ${version} · Windows 10 / 11 · 64 bits${size}`;
         })
         .catch(() => {});
     }
