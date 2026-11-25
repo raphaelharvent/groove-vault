@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e0c0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Groove Vault">
+  <meta name="description" content="Ta collection de vinyles et de CD, ta wishlist, tes amis et tes critiques d'albums.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' https://api.discogs.com https://*.supabase.co wss://*.supabase.co; manifest-src 'self'; worker-src 'self'">
+  <title>Groove Vault</title>
+  <link rel="stylesheet" href="app.css?v=1.2.0-beta.6">
+</head>
+<body>
+  <div class="titlebar"><span>Groove Vault</span></div>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-disc"></div>
+      <div>
+        <div class="brand-name">Groove Vault <span class="beta-pill" title="Version bêta : merci de signaler les bugs !">Bêta</span></div>
+        <div class="brand-sub">Vinyles &amp; CD</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-view="collection">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Collection</span><em id="nav-count">0</em>
+      </button>
+      <button class="nav-btn" data-view="add">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Ajouter un disque</span>
+      </button>
+      <button class="nav-btn" data-view="wishlist">
+        <svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10.3A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.6c0 5.7-7.5 10.3-7.5 10.3z"/></svg>
+        <span>Wishlist</span><em id="nav-wish">0</em>
+      </button>
+      <button class="nav-btn" data-view="feed">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h13"/><circle cx="19" cy="15.5" r="2.5"/></svg>
+        <span>Fil d'actualité</span><em id="nav-feed" class="badge hidden">0</em>
+      </button>
+      <button class="nav-btn" data-view="reviews">
+        <svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>
+        <span>Critiques</span>
+      </button>
+      <button class="nav-btn" data-view="profile">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.6c2.3.2 4 1.8 4.5 5.4"/></svg>
+        <span>Profil & amis</span><em id="nav-requests" class="badge hidden">0</em>
+      </button>
+      <button class="nav-btn" data-view="stats">
+        <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        <span>Statistiques</span>
+      </button>
+      <button class="nav-btn" data-view="news">
+        <svg viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M18.5 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
+        <span>Nouveautés</span><em id="nav-news" class="badge dot hidden">•</em>
+      </button>
+      <button class="nav-btn" data-view="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>
+        <span>Réglages</span>
+      </button>
+    </nav>
+
+    <div class="side-task hidden" id="side-task" title="Récupération des cotes Discogs des disques importés">
+      <span class="side-task-disc"></span>
+      <div class="side-task-body">
+        <b>Récupération des cotes</b>
+        <span id="side-task-text"></span>
+        <i class="side-task-bar"><i id="side-task-fill"></i></i>
+      </div>
+    </div>
+
+    <button class="side-profile" id="side-profile" data-goto="profile"></button>
+
+    <div class="side-value">
+      <div class="side-label">Valeur estimée</div>
+      <div class="side-amount" id="side-total">0 €</div>
+      <div class="side-meta" id="side-meta">Aucun disque</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- COLLECTION -->
+    <section class="view active" id="view-collection">
+      <header class="view-head">
+        <div>
+          <h1>Ma collection</h1>
+          <p class="subtitle" id="collection-sub"></p>
+        </div>
+        <div class="toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <input id="filter-text" type="search" placeholder="Artiste, titre, label…">
+          </div>
+          <select id="filter-tier">
+            <option value="">Toutes raretés</option>
+          </select>
+          <select id="filter-genre">
+            <option value="">Tous genres</option>
+          </select>
+          <select id="filter-format">
+            <option value="">Tous supports</option>
+            <option value="vinyl">Vinyles</option>
+            <option value="cd">CD</option>
+          </select>
+          <select id="sort">
+            <option value="added">Ajout récent</option>
+            <option value="artist">Artiste A→Z</option>
+            <option value="title">Titre A→Z</option>
+            <option value="year">Année</option>
+            <option value="value">Valeur ↓</option>
+            <option value="rarity">Rareté ↓</option>
+          </select>
+          <button class="btn ghost" id="refresh-all" title="Mettre à jour la cote de tous les disques via Discogs">
+            <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+            <span>Actualiser les cotes</span>
+          </button>
+        </div>
+      </header>
+      <div class="grid" id="grid"></div>
+      <div class="empty hidden" id="empty">
+        <div class="empty-disc"></div>
+        <h2>Ta discothèque est vide</h2>
+        <p>Ajoute ton premier vinyle ou CD depuis la base Discogs, ou en saisie manuelle.</p>
+        <button class="btn primary" data-goto="add">Ajouter un disque</button>
+      </div>
+    </section>
+
+    <!-- WISHLIST -->
+    <section class="view" id="view-wishlist">
+      <header class="view-head">
+        <div>
+          <h1>Ma wishlist</h1>
+          <p class="subtitle" id="wl-sub"></p>
+        </div>
+        <div class="toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <input id="wl-text" type="search" placeholder="Artiste, titre, label…">
+          </div>
+          <select id="wl-format">
+            <option value="">Tous supports</option>
+            <option value="vinyl">Vinyles</option>
+            <option value="cd">CD</option>
+          </select>
+          <select id="wl-sort">
+            <option value="priority">Priorités d'abord</option>
+            <option value="added">Ajout récent</option>
+            <option value="artist">Artiste A→Z</option>
+            <option value="price">Prix ↑</option>
+          </select>
+          <button class="btn ghost" id="wl-refresh" title="Récupérer le prix le plus bas de chaque disque sur Discogs">
+            <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+            <span>Actualiser les prix</span>
+          </button>
+          <button class="btn primary" data-goto="add">+ Ajouter</button>
+        </div>
+      </header>
+      <div class="grid wl-grid" id="wl-grid"></div>
+      <div class="empty hidden" id="wl-empty">
+        <div class="empty-disc wl-empty-heart"></div>
+        <h2>Ta wishlist est vide</h2>
+        <p>Cherche un vinyle ou un CD dans « Ajouter un disque » et clique sur ♥ Wishlist. Tes amis verront ce qui te ferait plaisir.</p>
+        <button class="btn primary" data-goto="add">Chercher un disque</button>
+      </div>
+    </section>
+
+    <!-- AJOUT -->
+    <section class="view" id="view-add">
+      <header class="view-head">
+        <div>
+          <h1>Ajouter un disque</h1>
+          <p class="subtitle">Recherche dans les 18 millions de références Discogs, ou saisis-le à la main.</p>
+        </div>
+        <div class="seg" id="add-tabs">
+          <button class="active" data-tab="discogs">Recherche Discogs</button>
+          <button data-tab="import">Ma collection Discogs</button>
+          <button data-tab="manual">Saisie manuelle</button>
+        </div>
+      </header>
+
+      <div class="tab active" id="tab-discogs">
+        <form class="search-hero" id="search-form">
+          <div class="search-box big">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <input id="search-q" placeholder="Ex : Daft Punk Discovery, ou colle un lien Discogs…" autocomplete="off">
+          </div>
+          <select id="search-format" title="Support">
+            <option value="all">Vinyles &amp; CD</option>
+            <option value="Vinyl">Vinyles</option>
+            <option value="CD">CD</option>
+          </select>
+          <label class="check"><input type="checkbox" id="search-barcode"> Code-barres</label>
+          <button class="btn primary" type="submit">Rechercher</button>
+        </form>
+        <div class="token-warning hidden" id="token-warning">
+          Pour chercher dans Discogs et obtenir la cote, ajoute ton jeton personnel Discogs (gratuit) dans
+          <a href="#" data-goto="settings">Réglages</a>.
+        </div>
+        <div class="results" id="results"></div>
+      </div>
+
+      <div class="tab" id="tab-import"><div id="import-root"></div></div>
+
+      <div class="tab" id="tab-manual">
+        <form class="manual" id="manual-form">
+          <div class="manual-cover">
+            <div class="manual-preview" id="manual-preview"></div>
+            <button type="button" class="btn ghost" id="manual-pick">Choisir une pochette…</button>
+          </div>
+          <div class="form-grid">
+            <label>Artiste *<input name="artist" required></label>
+            <label>Titre *<input name="title" required></label>
+            <label>Année<input name="year" type="number" min="1900" max="2100"></label>
+            <label>Label<input name="label"></label>
+            <label>Référence (cat. no)<input name="catno"></label>
+            <label>Pays<input name="country"></label>
+            <label>Genres (séparés par des virgules)<input name="genres" placeholder="Rock, Jazz"></label>
+            <label>Support
+              <select name="format"><option value="vinyl">Vinyle</option><option value="cd">CD</option></select>
+            </label>
+            <label class="vinyl-only">Format
+              <select name="sizeInch"><option value="12">12" (LP)</option><option value="10">10"</option><option value="7">7" (single)</option></select>
+            </label>
+            <label class="vinyl-only">Vitesse
+              <select name="rpm"><option value="33">33⅓ tours</option><option value="45">45 tours</option><option value="78">78 tours</option></select>
+            </label>
+            <label>État du disque
+              <select name="media" class="cond-select"></select>
+            </label>
+            <label>Prix d'achat<input name="purchasePrice" type="number" step="0.01" min="0"></label>
+            <label>Valeur estimée<input name="manualValue" type="number" step="0.01" min="0"></label>
+            <label class="color-row vinyl-only">Vinyle coloré
+              <span><input type="checkbox" name="colored"> <input type="color" name="color" value="#b3142f"></span>
+            </label>
+            <label class="span2">Notes<textarea name="notes" rows="3"></textarea></label>
+          </div>
+          <div class="form-actions"><button class="btn primary" type="submit">Ajouter à la collection</button></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- FIL D'ACTUALITÉ DES AMIS -->
+    <section class="view" id="view-feed">
+      <div id="feed-root"></div>
+    </section>
+
+    <!-- CRITIQUES -->
+    <section class="view" id="view-reviews">
+      <div id="reviews-root"></div>
+    </section>
+
+    <!-- PAGE D'UN ALBUM -->
+    <section class="view" id="view-album">
+      <div id="album-root"></div>
+    </section>
+
+    <!-- PROFIL & AMIS -->
+    <section class="view" id="view-profile">
+      <div id="profile-root"></div>
+    </section>
+
+    <!-- COLLECTION D'UN AMI -->
+    <section class="view" id="view-friend">
+      <div id="friend-root"></div>
+    </section>
+
+    <!-- STATS -->
+    <section class="view" id="view-stats">
+      <header class="view-head">
+        <div>
+          <h1>Statistiques</h1>
+          <p class="subtitle">Ta collection en chiffres.</p>
+        </div>
+      </header>
+      <div id="stats"></div>
+    </section>
+
+    <!-- NOUVEAUTÉS -->
+    <section class="view" id="view-news">
+      <div id="news-root"></div>
+    </section>
+
+    <!-- RÉGLAGES -->
+    <section class="view" id="view-settings">
+      <header class="view-head">
+        <div>
+          <h1>Réglages</h1>
+          <p class="subtitle">Connexion Discogs, devise, ambiance sonore et sauvegarde.</p>
+        </div>
+      </header>
+      <div class="settings">
+        <div class="card-panel">
+          <h3>Jeton Discogs</h3>
+          <p class="muted">Nécessaire pour rechercher des disques et récupérer leur cote réelle.
+            Crée-le gratuitement sur Discogs : <a href="#" id="open-token-page">Paramètres → Développeurs → Générer un jeton</a>.</p>
+          <div class="row">
+            <input type="password" id="set-token" placeholder="Colle ton jeton personnel ici" autocomplete="off">
+            <button class="btn primary" id="save-token">Enregistrer</button>
+          </div>
+          <div class="muted small" id="token-status"></div>
+        </div>
+        <div class="card-panel">
+          <h3>Devise</h3>
+          <p class="muted">Utilisée pour les prix du marché Discogs.</p>
+          <select id="set-currency">
+            <option>EUR</option><option>USD</option><option>GBP</option><option>CAD</option>
+            <option>CHF</option><option>JPY</option><option>AUD</option>
+          </select>
+        </div>
+        <div class="card-panel">
+          <h3>Ambiance</h3>
+          <label class="check"><input type="checkbox" id="set-crackle"> Craquements de vinyle sur la platine</label>
+          <label class="slider">Volume <input type="range" id="set-volume" min="0" max="1" step="0.05"></label>
+        </div>
+        <div class="card-panel">
+          <h3>Sauvegarde</h3>
+          <p class="muted">Exporte ta collection dans un fichier JSON, ou importe une sauvegarde.</p>
+          <div class="row">
+            <button class="btn ghost" id="export">Exporter…</button>
+            <button class="btn ghost" id="import">Importer…</button>
+          </div>
+        </div>
+        <div class="card-panel span2">
+          <h3>Mises à jour</h3>
+          <p class="muted" id="app-version"></p>
+          <p class="muted small">Groove Vault vérifie automatiquement les nouvelles versions au démarrage, puis toutes les 4 heures.</p>
+          <div class="row">
+            <button class="btn ghost" id="check-update">
+              <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+              Rechercher une mise à jour
+            </button>
+          </div>
+          <div class="muted small" id="update-status"></div>
+        </div>
+        <div class="card-panel span2">
+          <h3>Comment la rareté est calculée</h3>
+          <p class="muted">Le score (0 à 100) combine quatre signaux issus de la communauté Discogs :</p>
+          <ul class="muted formula">
+            <li><b>Tirage</b> (35 %) : moins de membres possèdent le disque, plus il est rare.</li>
+            <li><b>Demande</b> (25 %) : rapport entre les membres qui le recherchent et ceux qui l'ont.</li>
+            <li><b>Offre</b> (20 %) : nombre d'exemplaires actuellement en vente.</li>
+            <li><b>Prix</b> (20 %) : prix plancher sur le marché.</li>
+          </ul>
+          <div class="tier-legend" id="tier-legend"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="detail hidden" id="detail"></div>
+  <div class="toasts" id="toasts"></div>
+  <script src="vault.js?v=1.2.0-beta.6"></script>
+  <script src="app.js?v=1.2.0-beta.6"></script>
+</body>
+</html>

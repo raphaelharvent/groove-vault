@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Groove Vault · Ta collection de vinyles et de CD</title>
-  <meta name="description" content="Application Windows gratuite pour recenser ta collection de vinyles et de CD : platine animée, cote réelle Discogs, indice de rareté et collections de tes amis.">
+  <meta name="description" content="Application gratuite pour Windows, iPhone et Android : recense ta collection de vinyles et de CD, avec platine animée, cote réelle Discogs, indice de rareté, wishlist et collections de tes amis.">
   <link rel="icon" href="img/icon.png">
   <meta property="og:title" content="Groove Vault">
   <meta property="og:description" content="Ta collection de vinyles et de CD, avec sa vraie cote et sa rareté.">
@@ -42,7 +42,7 @@
     nav .btn { padding: 9px 16px; font-size: 14px; }
 
     /* Hero */
-    .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; padding: 90px 0 70px; }
+    .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; padding-top: 90px; padding-bottom: 70px; }
     .eyebrow { display: inline-block; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 18px; }
     h1 { font: 700 clamp(40px, 5.6vw, 66px)/1.02 var(--display); margin: 0 0 22px; letter-spacing: -.01em; }
     h1 em { font-style: normal; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -115,6 +115,12 @@
     .dl-card p { color: var(--muted); margin: 0 0 24px; }
     .smartscreen { margin-top: 22px; padding: 14px 16px; border-radius: 12px; background: rgba(240, 160, 75, .07); border: 1px solid rgba(240, 160, 75, .22); color: #f3d2ad; font-size: 14px; text-align: left; }
 
+    .m-card .qr { width: 168px; height: 168px; margin: 0 auto 14px; padding: 10px; border-radius: 16px; background: #f1e8dc; box-shadow: 0 16px 34px rgba(0, 0, 0, .45); }
+    .m-card .qr img { width: 100%; margin: 0; display: block; }
+    nav a.tab-mobile { color: var(--text); font-weight: 600; }
+    .is-phone .m-card .qr, .is-phone #release-meta { display: none; }
+    @media (max-width: 600px) { .hero { padding-top: 40px; } .hero h1 { font-size: 40px; } nav .logo { font-size: 0; gap: 0; } }
+
     details { border-bottom: 1px solid var(--line); padding: 18px 0; }
     summary { cursor: pointer; font: 600 18px var(--display); list-style: none; display: flex; justify-content: space-between; }
     summary::after { content: "+"; color: var(--accent); font-size: 22px; transition: transform .2s; }
@@ -128,7 +134,8 @@
       .hero, .install, .shots { grid-template-columns: 1fr; }
       .features { grid-template-columns: 1fr 1fr; }
       .stage { height: 380px; transform: scale(.8); transform-origin: left top; }
-      nav a.link { display: none; }
+      nav a.link:not(.tab-mobile) { display: none; }
+      nav .wrap { gap: 16px; }
     }
     @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
   </style>
@@ -139,6 +146,7 @@
       <a class="logo" href="#"><img src="img/icon.png" alt="">Groove Vault</a>
       <a class="link" href="#fonctionnalites">Fonctionnalités</a>
       <a class="link" href="#installer">Installer</a>
+      <a class="link tab-mobile" href="#mobile">📱 Appli mobile</a>
       <a class="link" href="#faq">FAQ</a>
       <a class="btn primary dl-link" href="#installer">Télécharger</a>
     </div>
@@ -146,7 +154,7 @@
 
   <header class="wrap hero">
     <div>
-      <span class="eyebrow">Gratuit · Windows 10 et 11</span>
+      <span class="eyebrow">Gratuit · Windows, iPhone et Android</span>
       <h1>Tes vinyles et tes CD,<br><em>comme elle le mérite.</em></h1>
       <p class="lead">Recense tes disques, regarde-les tourner sur une vraie platine, découvre leur cote réelle et leur rareté, et compare ta discothèque avec celles de tes amis.</p>
       <div class="cta">
@@ -154,7 +162,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
           Télécharger pour Windows
         </a>
-        <a class="btn ghost big" href="#fonctionnalites">Découvrir</a>
+        <a class="btn ghost big" href="#mobile">📱 Mobile</a>
       </div>
       <div class="meta" id="release-meta">Installateur Windows 64 bits</div>
     </div>
@@ -224,6 +232,31 @@
     </div>
   </section>
 
+  <section id="mobile">
+    <div class="wrap install">
+      <div>
+        <h2>Sur ton téléphone</h2>
+        <p class="section-lead">Groove Vault existe aussi en appli pour iPhone et Android. Rien à télécharger depuis un store : elle s'installe depuis ce site et se met à jour toute seule.</p>
+        <ol class="steps">
+          <li><b>Ouvre l'appli sur ton téléphone</b><span>Scanne le QR code, ou touche « Ouvrir l'appli mobile » depuis ton téléphone.</span></li>
+          <li><b>Sur iPhone : Partager, puis « Sur l'écran d'accueil »</b><span>Dans Safari, touche le bouton Partager (en bas, ou dans le menu ⋯), puis « Sur l'écran d'accueil » et « Ajouter ».</span></li>
+          <li><b>Sur Android : « Installer »</b><span>Touche le bouton « Installer » de l'appli, ou « Installer l'application » dans le menu de Chrome.</span></li>
+          <li><b>Connecte-toi</b><span>Avec le même profil que sur ton PC : ta collection, ta wishlist, tes amis et tes critiques te suivent.</span></li>
+        </ol>
+      </div>
+      <div class="dl-card m-card">
+        <div class="qr"><img src="img/qr-app.svg" alt="QR code vers l'appli mobile Groove Vault"></div>
+        <h3>Appli mobile</h3>
+        <p>iPhone (Safari) · Android (Chrome)</p>
+        <a class="btn primary big" href="app/#installer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M11 18.5h2"/></svg>
+          Ouvrir l'appli mobile
+        </a>
+        <div class="smartscreen">Sur iPhone, l'installation passe obligatoirement par le bouton Partager de Safari : Apple ne permet pas aux sites de s'installer d'un seul clic.</div>
+      </div>
+    </div>
+  </section>
+
   <section id="faq">
     <div class="wrap">
       <h2>Questions fréquentes</h2>
@@ -231,7 +264,8 @@
       <details><summary>Où sont stockées mes données ?</summary><p>Ta collection est enregistrée sur ton PC. Si tu crées un profil, elle est aussi synchronisée en ligne pour que tes amis puissent la voir et que tu puisses la retrouver sur un autre ordinateur. Tes prix d'achat et tes notes restent privés.</p></details>
       <details><summary>Qu'est-ce que le jeton Discogs ?</summary><p>Une clé gratuite qui permet à l'application d'interroger Discogs en ton nom. Crée un compte sur discogs.com, puis va dans Paramètres → Développeurs → « Générer un nouveau jeton », et colle-le dans les Réglages de Groove Vault.</p></details>
       <details><summary>Comment est calculée la rareté ?</summary><p>Le score combine le nombre de membres qui possèdent le pressage (35 %), le rapport entre ceux qui le recherchent et ceux qui l'ont (25 %), le nombre d'exemplaires en vente (20 %) et le prix plancher (20 %).</p></details>
-      <details><summary>Et sur Mac ou Linux ?</summary><p>Pour l'instant, seule la version Windows est proposée.</p></details>
+      <details><summary>Et sur iPhone ou Android ?</summary><p>Oui : ouvre l'<a href="app/">appli mobile</a> depuis ton téléphone et ajoute-la à ton écran d'accueil (voir « Sur ton téléphone » plus haut). Elle a son icône, s'ouvre en plein écran et se met à jour toute seule.</p></details>
+      <details><summary>Et sur Mac ou Linux ?</summary><p>Il n'y a pas d'installateur, mais l'<a href="app/">appli mobile</a> fonctionne aussi dans le navigateur d'un ordinateur.</p></details>
     </div>
   </section>
 
@@ -248,6 +282,18 @@
     const FILE = 'Groove-Vault-Setup.exe';
 
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Visite depuis un téléphone : on propose l'appli mobile plutôt que l'installateur Windows
+    const phone = /iPhone|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (phone) {
+      document.documentElement.classList.add('is-phone');
+      const ios = !/Android/i.test(navigator.userAgent);
+      document.querySelectorAll('.dl-link').forEach(a => {
+        a.classList.remove('dl-link');
+        a.href = 'app/#installer';
+        a.innerHTML = a.closest('nav') ? 'Installer' : `Installer sur ${ios ? 'iPhone' : 'Android'}`;
+      });
+    }
     if (!REPO.startsWith('OWNER')) {
       const url = `https://github.com/${REPO}/releases/latest/download/${FILE}`;
       document.querySelectorAll('.dl-link').forEach(a => { a.href = url; });
