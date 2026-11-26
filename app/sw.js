@@ -1,7 +1,7 @@
 /* Groove Vault - service worker de la version mobile.
    Réseau d'abord (toujours la dernière version publiée), cache en secours pour ouvrir l'appli hors connexion.
    Seuls les fichiers de l'appli sont mis en cache : jamais les appels à Discogs ou à Supabase. */
-const VERSION = '1.2.0-beta.11';
+const VERSION = '1.2.0-beta.12';
 const CACHE = 'gv-app-' + VERSION;
 const SHELL = ['./', 'index.html', 'app.css', 'vault.js', 'app.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/apple-touch-icon.png'];
 
