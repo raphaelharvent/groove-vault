@@ -14,7 +14,7 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' https://api.discogs.com https://*.supabase.co wss://*.supabase.co; manifest-src 'self'; worker-src 'self'">
   <title>Groove Vault</title>
-  <link rel="stylesheet" href="app.css?v=1.2.0-beta.7">
+  <link rel="stylesheet" href="app.css?v=1.2.0-beta.8">
 </head>
 <body>
   <div class="titlebar"><span>Groove Vault</span></div>
@@ -330,7 +330,7 @@
         <div class="card-panel span2">
           <h3>Mises à jour</h3>
           <p class="muted" id="app-version"></p>
-          <p class="muted small">Groove Vault vérifie automatiquement les nouvelles versions au démarrage, puis toutes les 4 heures.</p>
+          <p class="muted small">Groove Vault vérifie automatiquement les nouvelles versions au démarrage, toutes les 10 minutes et quand tu reviens sur l'appli.</p>
           <div class="row">
             <button class="btn ghost" id="check-update">
               <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
@@ -356,7 +356,7 @@
 
   <div class="detail hidden" id="detail"></div>
   <div class="toasts" id="toasts"></div>
-  <script src="vault.js?v=1.2.0-beta.7"></script>
-  <script src="app.js?v=1.2.0-beta.7"></script>
+  <script src="vault.js?v=1.2.0-beta.8"></script>
+  <script src="app.js?v=1.2.0-beta.8"></script>
 </body>
 </html>
