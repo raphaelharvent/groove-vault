@@ -14,7 +14,8 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' https://api.discogs.com https://*.supabase.co wss://*.supabase.co; manifest-src 'self'; worker-src 'self'">
   <title>Groove Vault</title>
-  <link rel="stylesheet" href="app.css?v=1.2.0-beta.16">
+  <script src="theme.js?v=1.2.0-beta.17"></script>
+  <link rel="stylesheet" href="app.css?v=1.2.0-beta.17">
 </head>
 <body>
   <div class="titlebar"><span>Groove Vault</span></div>
@@ -66,7 +67,7 @@
         <span>Nouveautés</span><em id="nav-news" class="badge dot hidden">•</em>
       </button>
       <button class="nav-btn" data-view="settings">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
         <span>Réglages</span>
       </button>
     </nav>
@@ -326,6 +327,7 @@
         </div>
         <div class="card-panel">
           <h3>Ambiance</h3>
+          <div class="theme-row"><span>Thème</span><div class="seg small" id="set-theme"><button type="button" data-theme-set="dark">🌙 Nuit</button><button type="button" data-theme-set="light">☀️ Jour</button></div></div>
           <label class="check"><input type="checkbox" id="set-starthome"> Ouvrir sur l'accueil au lancement</label>
           <label class="check"><input type="checkbox" id="set-crackle"> Craquements de vinyle sur la platine</label>
           <label class="slider">Volume <input type="range" id="set-volume" min="0" max="1" step="0.05"></label>
@@ -369,7 +371,7 @@
 
   <div class="detail hidden" id="detail"></div>
   <div class="toasts" id="toasts"></div>
-  <script src="vault.js?v=1.2.0-beta.16"></script>
-  <script src="app.js?v=1.2.0-beta.16"></script>
+  <script src="vault.js?v=1.2.0-beta.17"></script>
+  <script src="app.js?v=1.2.0-beta.17"></script>
 </body>
 </html>
